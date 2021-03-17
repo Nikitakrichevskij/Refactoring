@@ -1,3 +1,3 @@
-require_relative 'account'
+require_relative 'autoload'
 
-Account.new.console
+Bank.new.start

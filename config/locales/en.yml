@@ -1,0 +1,43 @@
+en:
+  welcome: |
+    Hello, we are RubyG bank!
+    If you want to create account - press `create`
+    If you want to load account - press `load`
+    If you want to exit - press `exit` 
+  wrongCommand: "You need to type %{commands}"
+  name: 'Write your name'
+  age: 'Write your age'
+  login: 'Write your login'
+  password: 'Write your password'
+  card_init: |
+   You could create one of 3 card types
+   Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`
+   Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`
+   Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`
+   For exit - press `exit`
+  user_actions: |
+   Welcome, 
+   'If you want to:'
+   '- show all cards - press SC'
+   '- create card - press CC'
+   '- destroy card - press DC'
+   '- put money on card - press PM'
+   '- withdraw money on card - press WM'
+   '- send money to another card  - press SM'
+   '- destroy account - press `DA`'
+   '- exit from account - press `exit`
+  delete_card: If you want to delete %{card_number}, %{card_type}, press %{index}
+  put_money: "Choose the card for putting: \n
+    %{card_number}, %{card_type}, press %{index}"
+  withdraw_money: "Choose the card for withdrawing: \n
+    %{card_number}, %{card_type}, press %{index}"
+  send_money: "Choose the card for sending: \n
+    %{card_number}, %{card_type}, press %{index}"
+  put_error: 'Your tax is higher than input amount'
+  money_amount: 'Input the amount of money'
+  recipient_card: 'Enter recipient card'
+  no_card_exist: 'You dont have cards'
+  show_cards: "All cards: \n
+    %{card_number}, %{card_type}"
+  wrong_password: 'Wrong password'
+  wrong_login: 'Wrong login'
