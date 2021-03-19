@@ -2,21 +2,11 @@
 :user:
 - !ruby/object:UserData
   name: Nikitik
-  age: '30'
+  age: '28'
   login: qwerty
   password: nikitik22
   card:
   - !ruby/object:CardGenerator
-    type: usual
-    number: '7117738294991330'
-    balance: 30.0
-- !ruby/object:UserData
-  name: Nikios
-  age: '29'
-  login: qwertyuu
-  password: nikitik22
-  card:
-  - !ruby/object:CardGenerator
-    type: capitalist
-    number: '8163117437857257'
-    balance: 300.0
+    type: virtual
+    number: '2833380318316059'
+    balance: 150.0

@@ -25,7 +25,7 @@ class CardFunctions
     return communication.output.no_cards if @current_account.card.empty?
 
     communication.output.delete_card(@current_account)
-    answer = communication.delete_card
+    answer = communication.serial_number_of_card(@current_account)
     @current_account.card.delete_at(answer.to_i - 1)
     @store.save
   end
@@ -37,7 +37,8 @@ class CardFunctions
     operation = 'put money'
     @selected_card = communication.serial_number_of_card(@current_account)
     money_amount = communication.put_money_amount
-    input_check(operation, current_card_type, money_amount)
+    return if input_check?(operation, current_card_type, money_amount)
+
     add_money_to_card(current_card, operation, current_card_type, money_amount)
     @store.save
   end
@@ -61,6 +62,8 @@ class CardFunctions
     @selected_card = communication.serial_number_of_card(@current_account)
     money_amount = communication.put_money_amount
     recipient_card = communication.recipient_card_input
+    return if input_check?(operation, current_card_type, money_amount)
+
     withdrawing_money(current_card, operation, current_card_type, money_amount)
     sending_money(another_card(recipient_card), money_amount)
   end
@@ -88,8 +91,8 @@ class CardFunctions
     Tax.new.withdraw_put_tax(operation, type, amount)
   end
 
-  def input_check(operation, type, amount)
-    tax_calculate(operation, type, amount) > amount.to_i ? exit : true
+  def input_check?(operation, type, amount)
+    tax_calculate(operation, type, amount) > amount.to_i
   end
 
   def add_money_to_card(somecard, operation, type, amount)

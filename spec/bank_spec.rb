@@ -2,8 +2,8 @@ RSpec.describe Bank do
   subject(:current_subject) { described_class.new }
 
   let(:test_file) { 'account.yml' }
-  let(:directory_path) { 'CodebreakerStore::STORAGE_DIRECTORY' }
-  let(:filename) { 'CodebreakerStore::STORAGE_FILE' }
+  let(:directory_path) { 'BankStorage::STORAGE_DIRECTORY' }
+  let(:filename) { 'BankStorage::STORAGE_FILE' }
   let(:db_test) { 'spec/fixtures' }
 
   describe '#console' do
@@ -161,7 +161,7 @@ RSpec.describe Bank do
   describe '#create_card' do
     subject(:card_functions) { CardFunctions.new(current_acc, storage, true) }
 
-    let(:storage) { CodebreakerStore.new }
+    let(:storage) { BankStorage.new }
     let(:current_acc) { UserData.new(name: 'Johnny', age: '29', login: 'login', password: 'password', card: []) }
 
     it 'create usual card' do
@@ -198,7 +198,7 @@ RSpec.describe Bank do
       let(:without_card_data) do
         UserData.new(name: 'Johnny', age: '29', login: 'qweqwe', password: 'qweqweqweqw', card: [])
       end
-      let(:storage) { CodebreakerStore.new }
+      let(:storage) { BankStorage.new }
 
       after do
         File.delete(File.join(db_test, test_file))
@@ -218,11 +218,11 @@ RSpec.describe Bank do
     let(:with_card_data) do
       UserData.new(name: 'Johnny', age: '29', login: 'qweqwe', password: 'qweqweqweqw', card: [card])
     end
-    let(:storage) { CodebreakerStore.new }
+    let(:storage) { BankStorage.new }
     let(:card) { CardGenerator.new.cards('usual') }
 
     it 'delete card' do
-      allow(card_functions.communication).to receive(:delete_card).and_return('1')
+      allow(card_functions.communication).to receive(:serial_number_of_card).and_return('1')
       card_functions.destroy_card
       expect(card_functions.current_account.card).to be_empty
     end
@@ -240,7 +240,7 @@ RSpec.describe Bank do
     end
 
     let(:card) { CardGenerator.new.cards('capitalist') }
-    let(:storage) { CodebreakerStore.new }
+    let(:storage) { BankStorage.new }
 
     context 'without cards' do
       subject(:card_functions) { CardFunctions.new(without_card_data, storage, true) }
@@ -272,7 +272,7 @@ RSpec.describe Bank do
       it 'exits the application when tax > input amount of money' do
         allow(card_functions.communication).to receive(:serial_number_of_card).and_return(1)
         allow(card_functions.communication).to receive(:put_money_amount).and_return(1)
-        expect(card_functions).to receive(:exit)
+        expect(card_functions).not_to receive(:add_money_to_card)
         card_functions.put_money
       end
     end
@@ -290,7 +290,7 @@ RSpec.describe Bank do
     end
 
     let(:card) { CardGenerator.new.cards('usual') }
-    let(:storage) { CodebreakerStore.new }
+    let(:storage) { BankStorage.new }
 
     context 'without cards' do
       subject(:card_functions) { CardFunctions.new(without_card_data, storage, true) }
@@ -333,7 +333,7 @@ RSpec.describe Bank do
     end
 
     let(:card) { CardGenerator.new.cards('usual') }
-    let(:storage) { CodebreakerStore.new }
+    let(:storage) { BankStorage.new }
 
     context 'without cards' do
       subject(:card_functions) { CardFunctions.new(without_card_data, storage, true) }
@@ -448,7 +448,7 @@ RSpec.describe Bank do
         Dir.rmdir(db_test)
       end
 
-      let(:accounts) { CodebreakerStore.new.data[:user] }
+      let(:accounts) { BankStorage.new.data[:user] }
       let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: 'qwdqwdq', card: []) }
       let(:correct_input) { 'qwertyy' }
       let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: 'qwdqwdq', card: []) }
@@ -505,7 +505,7 @@ RSpec.describe Bank do
         Dir.rmdir(db_test)
       end
 
-      let(:accounts) { CodebreakerStore.new.data[:user] }
+      let(:accounts) { BankStorage.new.data[:user] }
       let(:correct_input) { 'qwertyy' }
       let(:some_account) do
         UserData.new(name: 'qqq', age: '29', login: correct_input, password: correct_input, card: [])
@@ -536,7 +536,7 @@ RSpec.describe Bank do
         Dir.rmdir(db_test)
       end
 
-      let(:accounts) { CodebreakerStore.new.data[:user] }
+      let(:accounts) { BankStorage.new.data[:user] }
       let(:correct_input) { 'qwertyy' }
       let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: correct_input, card: []) }
 
@@ -555,7 +555,7 @@ RSpec.describe Bank do
 
     context 'serial_number_of_card input' do
       let(:correct_input) { '1' }
-      let(:card){CardGenerator.new}
+      let(:card) { CardGenerator.new }
       let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: 'wwwww', card: [card]) }
 
       it 'test coorect serial_number input ' do
@@ -571,7 +571,7 @@ RSpec.describe Bank do
 
     context 'type of card input' do
       let(:correct_input) { 'usual' }
-  
+
       it 'test correct type input ' do
         allow(communication).to receive(:gets).and_return(correct_input)
         expect(communication.card_init).to eq(correct_input)
@@ -585,7 +585,7 @@ RSpec.describe Bank do
 
     context 'main menu input' do
       let(:correct_input) { 'SC' }
-  
+
       it 'test correct command input ' do
         allow(communication).to receive(:gets).and_return(correct_input)
         expect(communication.main_menu).to eq(correct_input)

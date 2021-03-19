@@ -25,7 +25,7 @@ class CardGenerator
   end
 
   def virtual
-    @type = 'capitalist'
+    @type = 'virtual'
     @number = number_generate
     @balance = 150.00
     self

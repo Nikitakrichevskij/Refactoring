@@ -4,7 +4,7 @@ class Bank < Console
 
   def initialize
     super()
-    @store = CodebreakerStore.new
+    @store = BankStorage.new
     @accounts = store.data[:user]
   end
 

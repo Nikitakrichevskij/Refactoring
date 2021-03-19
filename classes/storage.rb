@@ -1,4 +1,4 @@
-class CodebreakerStore
+class BankStorage
   STORAGE_DIRECTORY = 'db'.freeze
   STORAGE_FILE = 'db.yml'.freeze
   attr_accessor :data
