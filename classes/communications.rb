@@ -92,11 +92,6 @@ class Communication
     retry
   end
 
-  def delete_card
-    gets.chomp
-    # delete_card_valid(input, account)
-  end
-
   def serial_number_of_card(current_acc)
     input = gets.chomp
     serial_card_input_valid(input, current_acc)
