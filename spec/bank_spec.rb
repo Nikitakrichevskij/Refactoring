@@ -272,7 +272,7 @@ RSpec.describe Bank do
       it 'exits the application when tax > input amount of money' do
         allow(card_functions.communication).to receive(:serial_number_of_card).and_return(1)
         allow(card_functions.communication).to receive(:put_money_amount).and_return(1)
-        expect(card_functions).not_to receive(:add_money_to_card)
+        expect(card_functions).to receive(:input_check?)
         card_functions.put_money
       end
     end

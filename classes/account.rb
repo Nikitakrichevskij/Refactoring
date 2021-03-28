@@ -1,4 +1,4 @@
-class Bank < Console
+class Account < Console
   attr_reader :name, :age, :login, :password, :accounts, :current_account, :functions
   attr_accessor :store
 

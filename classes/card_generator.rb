@@ -1,39 +1,50 @@
-class CardGenerator
+class Card
   attr_reader :type, :number
   attr_accessor :balance
 
-  def cards(type)
-    case type
-    when 'usual' then usual
-    when 'capitalist' then capitalist
-    when 'virtual' then virtual
-    end
+  def initialize
+    @number = number_generate
   end
 
-  def usual
-    @type = 'usual'
-    @number = number_generate
-    @balance = 50.00
-    self
+  def number_generate
+    Constans::CARD_NUMBER_AMOUNT.times.map { rand(Constans::CARD_NUMBER_RANGE) }.join
   end
 
-  def capitalist
-    @type = 'capitalist'
-    @number = number_generate
-    @balance = 100.00
-    self
+  def put_money(amount)
+    @balance += amount - put_tax(amount)
   end
 
-  def virtual
-    @type = 'virtual'
-    @number = number_generate
-    @balance = 150.00
-    self
+  def operation_put_valid?(amount)
+    amount >= put_tax(amount)
+  end
+
+  def withdraw_money(amount)
+    amount - withdraw_tax(amount)
+  end
+
+  def operation_withdraw_valid?(amount)
+    (@balance - amount - withdraw_tax(amount)).positive?
+  end
+
+  def send_money(amount)
+    @balance -= amount - sender_tax(amount)
+  end
+
+  def operation_send_valid?(amount)
+    (@balance - amount - send_tax(amount)).positive?
   end
 
   private
 
-  def number_generate
-    16.times.map { rand(10) }.join
+  def withdraw_tax(amount)
+    raise NotImplementedError
+  end
+
+  def put_tax(amount)
+    raise NotImplementedError
+  end
+
+  def send_tax(amount)
+    raise NotImplementedError
   end
 end

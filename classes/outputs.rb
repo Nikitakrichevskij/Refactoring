@@ -38,7 +38,7 @@ class Outputs
 
   def delete_card(account)
     account.card.each_with_index do |card, index|
-      puts I18n.t(:delete_card, card_number: card.number, card_type: card.type, index: index + 1)
+      puts I18n.t(:decard, card_number: card.number, card_type: card.type, index: index + 1)
     end
   end
 

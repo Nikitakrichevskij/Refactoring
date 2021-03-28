@@ -1,5 +1,4 @@
 class Tax
-  include Constants
   def withdraw_put_tax(operation, type, amount)
     return put_tax(type, amount) if operation == 'put money'
     return withdraw_tax(type, amount) if operation == 'withdraw'
