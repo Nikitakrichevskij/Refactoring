@@ -41,3 +41,12 @@ en:
     %{card_number}, %{card_type}"
   wrong_password: 'Wrong password'
   wrong_login: 'Wrong login'
+  no_acc: Cant find account with this login
+  wrong_age: Your Age must be greeter then 23 and lower then 90
+  wrong_card_name: Worng type of card
+  wrong_card_number: Wrong number of card
+  wrong_command: "Comands must be #{Constants::START_MENU_COMMANDS}"
+  wrong_login: Login must be longer then 4 symbols. Login must be shorter then 20 symbols
+  wrong_name: Your name must not be empty and starts with first upcase letter
+  wrong_password: Password must be longer then 6 symbols. Password must be shorter then 30 symbols
+  wrong_serial: Wrong serial number of card

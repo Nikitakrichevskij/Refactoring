@@ -10,62 +10,74 @@ class CardFunctions
 
   def create_card
     type = communication.card_init
-    card = CardGenerator.new.cards(type)
-    @current_account.card << card
-    @store.save
+    case type
+    when Constants::CARD_TYPES[:usual] then current_account.card << CardUsual.new
+    when Constants::CARD_TYPES[:capitalist] then current_account.card << CardCapitalist.new
+    when Constants::CARD_TYPES[:virtual] then current_account.card << CardVirtual.new
+    end
+    store.save
   end
 
   def show_cards
-    return communication.output.no_cards if @current_account.card.empty?
+    return communication.view.output(:no_cards) if @current_account.card.empty?
 
     communication.output.show_cards(current_account)
   end
 
   def destroy_card
-    return communication.output.no_cards if @current_account.card.empty?
+    return communication.view.output(:no_cards) if @current_account.card.empty?
 
-    communication.output.delete_card(@current_account)
+    communication.view.output do
+      current_account.card.each_with_index do |card, index|
+        puts I18n.t(:delete_card, card_number: card.number, card_type: card.type, index: index + 1)
+      end
+    end
     answer = communication.serial_number_of_card(@current_account)
-    @current_account.card.delete_at(answer.to_i - 1)
+    @current_account.card.delete_at(answer.to_i.pred)
     @store.save
   end
 
   def put_money
-    return communication.output.no_cards if @current_account.card.empty?
+    return communication.view.output(:no_cards) if @current_account.card.empty?
 
-    communication.output.put_on_card(@current_account)
-    operation = 'put money'
-    @selected_card = communication.serial_number_of_card(@current_account)
+    communication.view.output do
+      current_account.card.each_with_index do |card, index|
+        puts I18n.t(:put_money, card_number: card.number, card_type: card.type, index: index + 1)
+      end
+    end
+    selected_card = communication.serial_number_of_card(@current_account)
     money_amount = communication.put_money_amount
-    return if input_check?(operation, current_card_type, money_amount)
-
-    add_money_to_card(current_card, operation, current_card_type, money_amount)
+    current_card(selected_card).put_money(money_amount)
     @store.save
   end
 
   def withdraw_money
-    return communication.output.no_cards if @current_account.card.empty?
+    return communication.view.output(:no_cards) if @current_account.card.empty?
 
-    communication.output.withdraw_money(@current_account)
-    operation = 'withdraw'
-    @selected_card = communication.serial_number_of_card(@current_account)
+    communication.view.output do
+      current_account.card.each_with_index do |card, index|
+        puts I18n.t(:withdraw_money, card_number: card.number, card_type: card.type, index: index + 1)
+      end
+    end
+    selected_card = communication.serial_number_of_card(@current_account)
     money_amount = communication.put_money_amount
-    withdrawing_money(current_card, operation, current_card_type, money_amount)
+    current_card(selected_card).withdraw_money(money_amount)
     @store.save
   end
 
   def send_money
-    return communication.output.no_cards if @current_account.card.empty?
+    return communication.view.output(:no_cards) if @current_account.card.empty?
 
-    communication.output.send_money(@current_account)
-    operation = 'send money'
-    @selected_card = communication.serial_number_of_card(@current_account)
+    communication.view.output do
+      current_account.card.each_with_index do |card, index|
+        puts I18n.t(:send_money, card_number: card.number, card_type: card.type, index: index + 1)
+      end
+    end
+    selected_card = communication.serial_number_of_card(@current_account)
     money_amount = communication.put_money_amount
     recipient_card = communication.recipient_card_input
-    return if input_check?(operation, current_card_type, money_amount)
-
-    withdrawing_money(current_card, operation, current_card_type, money_amount)
-    sending_money(another_card(recipient_card), money_amount)
+    current_card(selected_card).send_money(money_amount, another_card(recipient_card))
+    @store.save
   end
 
   private
@@ -74,32 +86,7 @@ class CardFunctions
     @accounts.map(&:card).flatten.select { |card| card.number == recipient_card }[0]
   end
 
-  def sending_money(somecard, amount)
-    somecard.balance += amount
-    @store.save
-  end
-
-  def current_card
-    @current_account.card[@selected_card - 1]
-  end
-
-  def current_card_type
-    current_card.type
-  end
-
-  def tax_calculate(operation, type, amount)
-    Tax.new.withdraw_put_tax(operation, type, amount)
-  end
-
-  def input_check?(operation, type, amount)
-    tax_calculate(operation, type, amount) > amount.to_i
-  end
-
-  def add_money_to_card(somecard, operation, type, amount)
-    somecard.balance += amount - tax_calculate(operation, type, amount)
-  end
-
-  def withdrawing_money(somecard, operation, type, amount)
-    somecard.balance -= amount + tax_calculate(operation, type, amount)
+  def current_card(selected_card)
+    @current_account.card[selected_card.pred]
   end
 end

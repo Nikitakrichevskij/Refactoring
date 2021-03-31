@@ -1,23 +1,24 @@
 module Validation
-  include Errors
   def validation_start_menu(input)
     raise WrongCommand unless Constants::START_MENU_COMMANDS.include?(input)
   end
 
   def name_valid(input)
-    raise WrongName unless input != '' && input[0].upcase == input[0]
+    raise WrongName if input.empty? || input.capitalize != input
   end
 
   def login_valid(input, accounts)
-    raise WrongLogin unless input.length > 4 && input.length < 20 && login_exist?(accounts, input)
+    raise WrongLogin if input.length < Constants::MIN_LOGIN_LENGTH || input.length > Constants::MAX_LOGIN_LENGTH || login_exist?(
+      accounts, input
+    )
   end
 
   def login_exist?(accounts, login)
-    accounts.select { |k, _v| k.login == login }.none?
+    accounts.select { |account| account.login == login }.any?
   end
 
   def login_search_valid?(accounts, login)
-    raise NoAcc if login_exist?(accounts, login)
+    raise NoAcc unless login_exist?(accounts, login)
   end
 
   def password_search_valid?(accounts, login, password)
@@ -25,15 +26,15 @@ module Validation
   end
 
   def password_exist?(accounts, login, password)
-    accounts.select { |k, _v| k.login == login }[0].password.eql?(password)
+    accounts.select { |account| account.login == login }.first.password.eql?(password)
   end
 
   def age_valid(input)
-    raise WrongAge unless input.to_i >= 23 && input.to_i <= 90
+    raise WrongAge if input.to_i <= Constants::AGE_MIN || input.to_i >= Constants::AGE_MAX
   end
 
   def password_valid(input)
-    raise WrongPassword unless input.length > 6 && input.length < 30
+    raise WrongPassword if input.length < MIN_PASSWORD_LENGTH || input.length > MAX_PASSWORD_LENGTH
   end
 
   def card_valid(input)
@@ -45,6 +46,6 @@ module Validation
   end
 
   def serial_card_input_valid(input, current_acc)
-    raise WrongSerial unless current_acc.card.size >= input.to_i
+    raise WrongSerial if current_acc.card.size <= input.to_i
   end
 end

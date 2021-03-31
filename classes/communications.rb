@@ -1,94 +1,98 @@
 class Communication
   include Validation
-  attr_reader :output, :login
+  attr_reader :view, :login
 
   def initialize
-    @output = Outputs.new
+    @view = Outputs.new
   end
 
   def start_menu
-    output.welcome
+    view.output(:welcome)
     input = gets.chomp
     validation_start_menu(input)
     input
   rescue WrongCommand
-    output.wrong_command
+    view.output(:wrong_command)
     retry
   end
 
   def name_init
-    output.name
+    view.output(:name)
     input = gets.chomp
     name_valid(input)
     input
   rescue WrongName
+    view.output(:wrong_name)
     retry
   end
 
   def age_init
-    output.age
+    view.output(:age)
     input = gets.chomp
     age_valid(input)
     input
   rescue WrongAge
+    view.output(:wrong_age)
     retry
   end
 
   def login_init(accounts)
-    output.login
+    view.output(:login)
     input = gets.chomp
     login_valid(input, accounts)
     input
   rescue WrongLogin
+    view.output(:wrong_login)
     retry
   end
 
   def login_search(accounts)
-    output.login
+    view.output(:login)
     @login = gets.chomp
     login_search_valid?(accounts, login)
     login
   rescue NoAcc
-    output.wrong_login
+    view.output(:wrong_login)
     retry
   end
 
   def password_search(accounts)
-    output.password
+    view.output(:password)
     password = gets.chomp
     password_search_valid?(accounts, login, password)
     password
   rescue WrongPassword
-    output.wrong_password
+    view.output(:wrong_password)
     retry
   end
 
   def password_init
-    output.password
+    view.output(:password)
     input = gets.chomp
     password_valid(input)
     input
   rescue WrongPassword
-    output.wrong_command
+    view.output(:wrong_command)
     retry
   end
 
   def card_init
-    output.card_init
+    view.output(:card_init)
     input = gets.chomp
     card_valid(input)
     input
   rescue WrongCardName
-    output.wrong_command
+    view.output(:wrong_card_name)
     retry
   end
 
   def main_menu
-    output.user_actions
+    view.output(:user_actions)
     input = gets.chomp
     main_menu_valid(input)
     input
   rescue WrongCommand
+    view.output(:wrong_command)
     retry
   end
 
@@ -97,16 +101,17 @@ class Communication
     serial_card_input_valid(input, current_acc)
     input.to_i
   rescue WrongSerial
+    view.output(:wrong_serial)
     retry
   end
 
   def put_money_amount
-    output.money_amount
+    view.output(:money_amount)
     gets.chomp.to_i
   end
 
   def recipient_card_input
-    output.recipient_card
+    view.output(:recipient_card)
     gets.chomp
   end
 end

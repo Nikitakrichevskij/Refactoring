@@ -8,10 +8,6 @@ class Account < Console
     @accounts = store.data[:user]
   end
 
-  def start_menu
-    start
-  end
-
   def create
     data_input
     store.data[:user] << user_data
@@ -25,7 +21,7 @@ class Account < Console
   def loading
     @login = communication.login_search(accounts)
     @password = communication.password_search(accounts)
-    @current_account = accounts.select { |k, _v| k.login == login } [0]
+    @current_account = accounts.select { |account| account.login == login }.first
     @functions = CardFunctions.new(current_account, store, accounts)
     main_menu
   end
@@ -40,6 +36,13 @@ class Account < Console
   end
 
   def user_data
-    UserData.new(name: name, age: age, login: login, password: password, card: [])
+    user_data_params = {
+      name: @name,
+      age: @age,
+      login: @login,
+      password: @password,
+      card: []
+    }
+    UserData.new(user_data_params)
   end
 end

@@ -21,11 +21,11 @@ class CardVirtual < Card
     TAXES[withdraw] * amount
   end
 
-  def put_tax(amount)
-    TAXES[put] * amount
+  def put_tax
+    TAXES[put]
   end
 
-  def send_tax(amount)
-    TAXES[send] * amount
+  def send_tax
+    TAXES[send]
   end
 end

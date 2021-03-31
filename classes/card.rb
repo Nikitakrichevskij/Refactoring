@@ -7,7 +7,7 @@ class Card
   end
 
   def number_generate
-    Constans::CARD_NUMBER_AMOUNT.times.map { rand(Constans::CARD_NUMBER_RANGE) }.join
+    Constants::CARD_NUMBER_AMOUNT.times.map { rand(Constants::CARD_NUMBER_RANGE) }.join
   end
 
   def put_money(amount)
@@ -26,8 +26,9 @@ class Card
     (@balance - amount - withdraw_tax(amount)).positive?
   end
 
-  def send_money(amount)
-    @balance -= amount - sender_tax(amount)
+  def send_money(amount, another_card)
+    @balance -= amount - send_tax(amount)
+    another_card.balance += amount
   end
 
   def operation_send_valid?(amount)

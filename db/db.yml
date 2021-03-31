@@ -1,12 +1,2 @@
 ---
-:user:
-- !ruby/object:UserData
-  name: Nikitik
-  age: '28'
-  login: qwerty
-  password: nikitik22
-  card:
-  - !ruby/object:CardGenerator
-    type: virtual
-    number: '2833380318316059'
-    balance: 150.0
+:user: []

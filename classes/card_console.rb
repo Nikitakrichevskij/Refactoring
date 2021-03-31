@@ -1,2 +1,0 @@
-class Card_console
-end

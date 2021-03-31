@@ -1,4 +1,4 @@
-RSpec.describe Bank do
+RSpec.describe Account do
   subject(:current_subject) { described_class.new }
 
   let(:test_file) { 'account.yml' }

@@ -1,3 +1,3 @@
 require_relative 'autoload'
 
-Bank.new.start
+Account.new.start

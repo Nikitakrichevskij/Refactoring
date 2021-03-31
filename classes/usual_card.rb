@@ -18,14 +18,14 @@ class CardUsual < Card
   end
 
   def withdraw_tax(amount)
-    TAXES[withdraw] * amount
+    TAXES[:withdraw] * amount
   end
 
   def put_tax(amount)
-    TAXES[put] * amount
+    TAXES[:put] * amount
   end
 
-  def send_tax(amount)
-    TAXES[send] * amount
+  def send_tax(_amount)
+    TAXES[:send]
   end
 end

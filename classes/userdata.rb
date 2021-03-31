@@ -2,11 +2,11 @@ class UserData
   attr_reader :name, :age, :login, :password, :index
   attr_accessor :card
 
-  def initialize(name:, age:, login:, password:, card:)
-    @name = name
-    @age = age
-    @login = login
-    @password = password
-    @card = card
+  def initialize(params)
+    @name = params[:name]
+    @age = params[:age]
+    @login = params[:login]
+    @password = params[:password]
+    @card = params[:card]
   end
 end

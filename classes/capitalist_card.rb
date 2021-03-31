@@ -6,9 +6,9 @@ class CardCapitalist < Card
   TYPE = 'capitalist'.freeze
 
   TAXES = {
-    withdraw: 0.88,
-    put: 1,
-    sender: 1
+    withdraw: 0.04,
+    put: 10,
+    sender: 0.1
   }.freeze
 
   def initialize
@@ -21,8 +21,8 @@ class CardCapitalist < Card
     TAXES[withdraw] * amount
   end
 
-  def put_tax(amount)
-    TAXES[put] * amount
+  def put_tax
+    TAXES[put]
   end
 
   def send_tax(amount)
