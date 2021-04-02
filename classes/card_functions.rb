@@ -28,7 +28,7 @@ class CardFunctions
     return communication.view.output(:no_cards) if @current_account.card.empty?
 
     communication.view.output do
-      current_account.card.each_with_index do |card, index|
+      current_account.card.each_with_index do |card, index| 
         puts I18n.t(:delete_card, card_number: card.number, card_type: card.type, index: index + 1)
       end
     end

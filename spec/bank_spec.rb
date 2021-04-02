@@ -9,7 +9,7 @@ RSpec.describe Account do
   describe '#console' do
     context 'when correct method calling' do
       after do
-        current_subject.start_menu
+        current_subject.start
       end
 
       it 'create account if input is create' do
@@ -93,7 +93,7 @@ RSpec.describe Account do
           allow(current_subject.communication).to receive_message_chain(:login_search, :gets).and_return(login)
           allow(current_subject.communication).to receive_message_chain(:password_search, :gets).and_return(password)
           expect { current_subject }.not_to raise_error
-          current_subject.start_menu
+          current_subject.start
         end
       end
     end
@@ -144,7 +144,7 @@ RSpec.describe Account do
       end
     end
 
-    context 'When dontcards exist' do
+    context 'When cards arent exist' do
       subject(:card_functions) { CardFunctions.new(current_acc_without_cards, true, true) }
 
       let(:current_acc_without_cards) do
@@ -163,27 +163,30 @@ RSpec.describe Account do
 
     let(:storage) { BankStorage.new }
     let(:current_acc) { UserData.new(name: 'Johnny', age: '29', login: 'login', password: 'password', card: []) }
-
-    it 'create usual card' do
+    CARDS = {
+      usual: {
+        type: 'usual',
+        balance: 50.00
+      },
+      capitalist: {
+        type: 'capitalist',
+        balance: 100.00
+      },
+      virtual: {
+        type: 'virtual',
+        balance: 150.00
+      }
+    }.freeze
+    CARDS.each do |card_type, card_info|
+    it "create card with #{card_type} type" do
       allow(card_functions.store).to receive(:save)
-      allow(card_functions.communication).to receive(:card_init).and_return('usual')
+      expect(card_functions.communication).to receive(:card_init).and_return(card_info[:type])
       card_functions.create_card
-      expect(card_functions.current_account.card).not_to be_empty
+      expect(file_accounts.first.card.first[:type]).to eq card_info[:type]
+      expect(file_accounts.first.card.first[:balance]).to eq card_info[:balance]
+      expect(file_accounts.first.card.first[:number].length).to be 16
     end
-
-    it 'create capitalist card' do
-      allow(card_functions.store).to receive(:save)
-      allow(card_functions.communication).to receive(:card_init).and_return('capitalist')
-      card_functions.create_card
-      expect(card_functions.current_account.card).not_to be_empty
-    end
-
-    it 'create virtual card' do
-      allow(card_functions.store).to receive(:save)
-      allow(card_functions.communication).to receive(:card_init).and_return('virtual')
-      card_functions.create_card
-      expect(card_functions.current_account.card).not_to be_empty
-    end
+  end
   end
 
   describe '#destroy_card' do
