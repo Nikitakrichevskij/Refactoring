@@ -4,11 +4,11 @@ en:
     If you want to create account - press `create`
     If you want to load account - press `load`
     If you want to exit - press `exit` 
-  wrongCommand: "You need to type %{commands}"
-  name: 'Write your name'
-  age: 'Write your age'
-  login: 'Write your login'
-  password: 'Write your password'
+  wrongCommand: "Wrong command. Try again!"
+  name: 'Enter your name'
+  age: 'Enter your age'
+  login: 'Enter your login'
+  password: 'Enter your password'
   card_init: |
    You could create one of 3 card types
    Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`
@@ -27,16 +27,16 @@ en:
    '- destroy account - press `DA`'
    '- exit from account - press `exit`
   delete_card: If you want to delete %{card_number}, %{card_type}, press %{index}
-  put_money: "Choose the card for putting: \n
+  put_money: "Choose the card for putting: 
     %{card_number}, %{card_type}, press %{index}"
-  withdraw_money: "Choose the card for withdrawing: \n
+  withdraw_money: "Choose the card for withdrawing: 
     %{card_number}, %{card_type}, press %{index}"
   send_money: "Choose the card for sending: \n
     %{card_number}, %{card_type}, press %{index}"
   put_error: 'Your tax is higher than input amount'
   money_amount: 'Input the amount of money'
   recipient_card: 'Enter recipient card'
-  no_card_exist: 'You dont have cards'
+  no_card_exist: "There is no active cards!\n"
   show_cards: "All cards: \n
     %{card_number}, %{card_type}"
   wrong_password: 'Wrong password'
@@ -45,8 +45,8 @@ en:
   wrong_age: Your Age must be greeter then 23 and lower then 90
   wrong_card_name: Worng type of card
   wrong_card_number: Wrong number of card
-  wrong_command: "Comands must be #{Constants::START_MENU_COMMANDS}"
   wrong_login: Login must be longer then 4 symbols. Login must be shorter then 20 symbols
   wrong_name: Your name must not be empty and starts with first upcase letter
   wrong_password: Password must be longer then 6 symbols. Password must be shorter then 30 symbols
-  wrong_serial: Wrong serial number of card
+  wrong_serial: "You entered wrong number!\n"
+  incorrect_money_amount: You must input correct amount of money

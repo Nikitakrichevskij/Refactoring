@@ -19,16 +19,18 @@ class CardFunctions
   end
 
   def show_cards
-    return communication.view.output(:no_cards) if @current_account.card.empty?
+    return communication.view.output(:no_card_exist) if @current_account.card.empty?
 
-    communication.output.show_cards(current_account)
+    current_account.card.each_with_index do |card, index|
+      puts I18n.t(:show_cards, card_number: card.number, card_type: card.type, index: index + 1)
+    end
   end
 
   def destroy_card
-    return communication.view.output(:no_cards) if @current_account.card.empty?
+    return communication.view.output(:no_card_exist) if @current_account.card.empty?
 
     communication.view.output do
-      current_account.card.each_with_index do |card, index| 
+      current_account.card.each_with_index do |card, index|
         puts I18n.t(:delete_card, card_number: card.number, card_type: card.type, index: index + 1)
       end
     end
@@ -38,7 +40,7 @@ class CardFunctions
   end
 
   def put_money
-    return communication.view.output(:no_cards) if @current_account.card.empty?
+    return communication.view.output(:no_card_exist) if @current_account.card.empty?
 
     communication.view.output do
       current_account.card.each_with_index do |card, index|
@@ -46,13 +48,15 @@ class CardFunctions
       end
     end
     selected_card = communication.serial_number_of_card(@current_account)
-    money_amount = communication.put_money_amount
+    money_amount = communication.money_amount
+    return if current_card(selected_card).operation_put_valid?(money_amount) == false
+
     current_card(selected_card).put_money(money_amount)
     @store.save
   end
 
   def withdraw_money
-    return communication.view.output(:no_cards) if @current_account.card.empty?
+    return communication.view.output(:no_card_exist) if @current_account.card.empty?
 
     communication.view.output do
       current_account.card.each_with_index do |card, index|
@@ -60,13 +64,15 @@ class CardFunctions
       end
     end
     selected_card = communication.serial_number_of_card(@current_account)
-    money_amount = communication.put_money_amount
+    money_amount = communication.money_amount
+    return if current_card(selected_card).operation_withdraw_valid?(money_amount) == false
+
     current_card(selected_card).withdraw_money(money_amount)
     @store.save
   end
 
   def send_money
-    return communication.view.output(:no_cards) if @current_account.card.empty?
+    return communication.view.output(:no_card_exist) if @current_account.card.empty?
 
     communication.view.output do
       current_account.card.each_with_index do |card, index|
@@ -74,8 +80,10 @@ class CardFunctions
       end
     end
     selected_card = communication.serial_number_of_card(@current_account)
-    money_amount = communication.put_money_amount
+    money_amount = communication.money_amount
     recipient_card = communication.recipient_card_input
+    return if current_card(selected_card).operation_send_valid?(money_amount) == false
+
     current_card(selected_card).send_money(money_amount, another_card(recipient_card))
     @store.save
   end

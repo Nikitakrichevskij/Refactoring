@@ -26,6 +26,20 @@ class Account < Console
     main_menu
   end
 
+  def user_data
+    UserData.new(user_data_params)
+  end
+
+  def user_data_params
+    {
+      name: @name,
+      age: @age,
+      login: @login,
+      password: @password,
+      card: []
+    }
+  end
+
   private
 
   def data_input
@@ -33,16 +47,5 @@ class Account < Console
     @age = communication.age_init
     @login = communication.login_init(accounts)
     @password = communication.password_init
-  end
-
-  def user_data
-    user_data_params = {
-      name: @name,
-      age: @age,
-      login: @login,
-      password: @password,
-      card: []
-    }
-    UserData.new(user_data_params)
   end
 end

@@ -1,7 +1,7 @@
 class CardVirtual < Card
   attr_accessor :number, :balance, :type
 
-  DEFAULT_BALANCE = 50.00
+  DEFAULT_BALANCE = 150.00
 
   TYPE = 'virtual'.freeze
 
@@ -18,14 +18,14 @@ class CardVirtual < Card
   end
 
   def withdraw_tax(amount)
-    TAXES[withdraw] * amount
+    TAXES[:withdraw] * amount
   end
 
-  def put_tax
-    TAXES[put]
+  def put_tax(_amount)
+    TAXES[:put]
   end
 
-  def send_tax
-    TAXES[send]
+  def send_tax(_amount)
+    TAXES[:send]
   end
 end

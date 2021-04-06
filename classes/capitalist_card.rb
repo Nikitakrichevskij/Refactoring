@@ -1,7 +1,7 @@
 class CardCapitalist < Card
   attr_accessor :number, :balance, :type
 
-  DEFAULT_BALANCE = 50.00
+  DEFAULT_BALANCE = 100.00
 
   TYPE = 'capitalist'.freeze
 

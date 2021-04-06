@@ -34,7 +34,9 @@ module Validation
   end
 
   def password_valid(input)
-    raise WrongPassword if input.length < MIN_PASSWORD_LENGTH || input.length > MAX_PASSWORD_LENGTH
+    if input.length < Constants::MIN_PASSWORD_LENGTH || input.length > Constants::MAX_PASSWORD_LENGTH
+      raise WrongPassword
+    end
   end
 
   def card_valid(input)
@@ -46,6 +48,10 @@ module Validation
   end
 
   def serial_card_input_valid(input, current_acc)
-    raise WrongSerial if current_acc.card.size <= input.to_i
+    raise WrongSerial if current_acc.card.size < input.to_i || input.to_i.negative?
+  end
+
+  def money_amount_valid(input)
+    raise WrongMoneyInput if input.negative?
   end
 end

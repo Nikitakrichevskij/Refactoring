@@ -52,7 +52,7 @@ class Communication
     login_search_valid?(accounts, login)
     login
   rescue NoAcc
-    view.output(:wrong_login)
+    view.output(:no_acc)
     retry
   end
 
@@ -72,7 +72,7 @@ class Communication
     password_valid(input)
     input
   rescue WrongPassword
-    view.output(:wrong_command)
+    view.output(:wrong_password)
     retry
   end
 
@@ -92,7 +92,7 @@ class Communication
     main_menu_valid(input)
     input
   rescue WrongCommand
-    view.output(:wrong_command)
+    view.output(:wrongCommand)
     retry
   end
 
@@ -105,9 +105,14 @@ class Communication
     retry
   end
 
-  def put_money_amount
+  def money_amount
     view.output(:money_amount)
-    gets.chomp.to_i
+    input = gets.chomp.to_i
+    money_amount_valid(input)
+    input.to_i
+  rescue WrongMoneyInput
+    view.output(:incorrect_money_amount)
+    retry
   end
 
   def recipient_card_input
