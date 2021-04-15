@@ -64,6 +64,7 @@ GEM
 
 PLATFORMS
   ruby
+  universal-java-16
   x64-mingw32
 
 DEPENDENCIES
@@ -77,4 +78,4 @@ DEPENDENCIES
   simplecov-lcov
 
 BUNDLED WITH
-   2.2.15
+   2.2.16
