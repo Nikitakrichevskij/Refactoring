@@ -4,7 +4,7 @@ require 'pry'
 require 'date'
 require_relative 'config/i18n'
 require_relative 'modules/constants'
-require_relative 'modules/errors/NoAcc'
+require_relative 'modules/errors/NoAccount'
 Dir[File.join(__dir__, 'modules/errors/*.rb')].sort.each { |file| require file }
 require_relative 'modules/validation'
 require_relative 'classes/storage'

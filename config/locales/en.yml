@@ -4,7 +4,7 @@ en:
     If you want to create account - press `create`
     If you want to load account - press `load`
     If you want to exit - press `exit` 
-  wrongCommand: "Wrong command. Try again!"
+  wrong_command: "Wrong command. Try again!"
   name: 'Enter your name'
   age: 'Enter your age'
   login: 'Enter your login'
@@ -41,12 +41,18 @@ en:
     %{card_number}, %{card_type}"
   wrong_password: 'Wrong password'
   wrong_login: 'Wrong login'
-  no_acc: Cant find account with this login
+  no_account: There is no account with given credentials
   wrong_age: Your Age must be greeter then 23 and lower then 90
   wrong_card_name: Worng type of card
   wrong_card_number: Wrong number of card
-  wrong_login: Login must be longer then 4 symbols. Login must be shorter then 20 symbols
+  wrong_login: Login must present, be longer then 4 symbols and shorter then 20 symbols or
+    such account is already exists
   wrong_name: Your name must not be empty and starts with first upcase letter
-  wrong_password: Password must be longer then 6 symbols. Password must be shorter then 30 symbols
+  wrong_password: 'Password must present, be longer then 6 symbols and shorter then 30 symbols'
   wrong_serial: "You entered wrong number!\n"
   incorrect_money_amount: You must input correct amount of money
+  card_delete_confirmation: Are you sure you want to delete %{card_number}[y/n]
+  tax_higher: Your tax is higher than input amount
+  final_put_money_output: "Money %{money_amount} was put on %{card_number}. Balance: %{new_balance}. Tax: %{tax}"
+  put_money_amount: Input the amount of money you want to put on your card
+  withdraw_money_amount: Input the amount of money you want to withdraw

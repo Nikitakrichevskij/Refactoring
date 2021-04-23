@@ -1,6 +1,5 @@
 class WrongName < StandardError
-  ERROR_MESSAGE = I18n.t(:wrong_name)
   def initialize
-    super(ERROR_MESSAGE)
+    super(I18n.t(:wrong_name))
   end
 end

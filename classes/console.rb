@@ -6,8 +6,7 @@ class Console
   end
 
   def start
-    input = communication.start_menu
-    case input
+    case communication.start_menu
     when  Constants::COMMANDS[:create_account] then create
     when  Constants::COMMANDS[:load_account] then loading
     when  Constants::COMMANDS[:exit] then exit_command

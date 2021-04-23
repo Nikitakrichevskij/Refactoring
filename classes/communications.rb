@@ -51,8 +51,8 @@ class Communication
     @login = gets.chomp
     login_search_valid?(accounts, login)
     login
-  rescue NoAcc
-    view.output(:no_acc)
+  rescue NoAccount
+    view.output(:no_account)
     retry
   end
 
@@ -92,21 +92,30 @@ class Communication
     main_menu_valid(input)
     input
   rescue WrongCommand
-    view.output(:wrongCommand)
+    view.output(:wrong_command)
     retry
   end
 
   def serial_number_of_card(current_acc)
     input = gets.chomp
     serial_card_input_valid(input, current_acc)
-    input.to_i
+    input
   rescue WrongSerial
     view.output(:wrong_serial)
     retry
   end
 
-  def money_amount
-    view.output(:money_amount)
+  def card_delete_confirmation(current_account)
+    view.output do
+      current_account.card.each do |card|
+        puts I18n.t(:card_delete_confirmation, card_number: card.number)
+      end
+    end
+    gets.chomp
+  end
+
+  def money_amount(output)
+    view.output(output)
     input = gets.chomp.to_i
     money_amount_valid(input)
     input.to_i

@@ -1,6 +1,5 @@
 class WrongAge < StandardError
-  ERROR_MESSAGE = I18n.t(:wrong_age)
   def initialize
-    super(ERROR_MESSAGE)
+    super(I18n.t(:wrong_age))
   end
 end

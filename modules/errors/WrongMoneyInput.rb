@@ -1,6 +1,5 @@
 class WrongMoneyInput < StandardError
-  ERROR_MESSAGE = I18n.t(:incorrect_money_amount)
   def initialize
-    super(ERROR_MESSAGE)
+    super(I18n.t(:incorrect_money_amount))
   end
 end

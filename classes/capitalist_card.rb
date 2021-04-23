@@ -18,14 +18,14 @@ class CardCapitalist < Card
   end
 
   def withdraw_tax(amount)
-    TAXES[withdraw] * amount
+    TAXES[:withdraw] * amount
   end
 
-  def put_tax
-    TAXES[put]
+  def put_tax(_amount)
+    TAXES[:put]
   end
 
   def send_tax(amount)
-    TAXES[send] * amount
+    TAXES[:send] * amount
   end
 end

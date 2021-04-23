@@ -6,8 +6,8 @@ RSpec.describe Account do
     if_you_want_to_delete: 'If you want to delete:',
     choose_card: 'Choose the card for putting:',
     choose_card_withdrawing: 'Choose the card for withdrawing:',
-    input_amount: 'Input the amount of money',
-    withdraw_amount: 'Input the amount of money'
+    input_amount: 'Input the amount of money you want to put on your card',
+    withdraw_amount: 'Input the amount of money you want to withdraw'
   }.freeze
 
   HELLO_PHRASES = [
@@ -40,24 +40,15 @@ RSpec.describe Account do
     name: {
       first_letter: 'Your name must not be empty and starts with first upcase letter'
     },
-    login: {
-      present: 'Login must be longer then 4 symbols. Login must be shorter then 20 symbols',
-      longer: 'Login must be longer then 4 symbols. Login must be shorter then 20 symbols',
-      shorter: 'Login must be longer then 4 symbols. Login must be shorter then 20 symbols',
-      exists: 'Login must be longer then 4 symbols. Login must be shorter then 20 symbols'
-    },
-    password: {
-      present: 'Password must be longer then 6 symbols. Password must be shorter then 30 symbols',
-      longer: 'Password must be longer then 6 symbols. Password must be shorter then 30 symbols',
-      shorter: 'Password must be longer then 6 symbols. Password must be shorter then 30 symbols'
-    },
+    login: 'Login must present, be longer then 4 symbols and shorter then 20 symbols or such account is already exists',
+    password: 'Password must present, be longer then 6 symbols and shorter then 30 symbols',
     age: {
       length: 'Your Age must be greeter then 23 and lower then 90'
     }
   }.freeze
 
   ERROR_PHRASES = {
-    user_not_exists: 'Cant find account with this login',
+    user_not_exists: 'There is no account with given credentials',
     wrong_command: 'Wrong command. Try again!',
     no_active_cards: "There is no active cards!\n",
     wrong_card_type: "Wrong card type. Try again!\n",
@@ -95,9 +86,8 @@ RSpec.describe Account do
 
   subject(:current_subject) { described_class.new }
 
-  let(:test_file) { 'account.yml' }
   let(:directory_path) { 'BankStorage::STORAGE_DIRECTORY' }
-  let(:filename) { 'BankStorage::STORAGE_FILE' }
+  let(:app_path) { 'BankStorage::STORAGE_FILE' }
   let(:db_test) { 'spec/fixtures' }
 
   describe '#console' do
@@ -133,12 +123,12 @@ RSpec.describe Account do
     before do
       allow(current_subject.communication).to receive_message_chain(:gets, :chomp).and_return(*success_inputs)
       stub_const(directory_path, db_test)
-      stub_const(filename, test_file)
+      stub_const(app_path, OVERRIDABLE_FILENAME)
       Dir.mkdir(db_test)
     end
 
     after do
-      File.delete(File.join(db_test, test_file))
+      File.delete(OVERRIDABLE_FILENAME)
       Dir.rmdir(db_test)
     end
 
@@ -178,36 +168,34 @@ RSpec.describe Account do
 
         context 'when present' do
           let(:error_input) { '' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:present] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when longer' do
           let(:error_input) { 'E' * 3 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:longer] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when shorter' do
           let(:error_input) { 'E' * 21 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:shorter] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when exists' do
           let(:error_input) { 'Denis1345' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:exists] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login] }
 
           before do
             allow(current_subject).to receive(:accounts) { [instance_double('Account', login: error_input)] }
           end
 
-          it do
-            expect { current_subject.create }.to output(/#{error}/).to_stdout
-          end
+          it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
       end
 
@@ -233,21 +221,21 @@ RSpec.describe Account do
 
         context 'when absent' do
           let(:error_input) { '' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password][:present] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when longer' do
           let(:error_input) { 'E' * 5 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password][:longer] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when shorter' do
           let(:error_input) { 'E' * 31 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password][:shorter] }
+          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
@@ -259,7 +247,7 @@ RSpec.describe Account do
     context 'without active accounts' do
       before do
         stub_const(directory_path, db_test)
-        stub_const(filename, test_file)
+        stub_const(app_path, OVERRIDABLE_FILENAME)
         allow(current_subject.communication).to receive(:login_search).with(current_subject.accounts)
         allow(current_subject.communication).to receive(:password_search).with(current_subject.accounts)
       end
@@ -378,7 +366,7 @@ RSpec.describe Account do
       end
     end
 
-    context 'When cards arent exist' do
+    context 'When there are no active cards' do
       subject(:card_functions) { CardFunctions.new(current_acc_without_cards, true, true) }
 
       let(:current_acc_without_cards) do
@@ -397,12 +385,12 @@ RSpec.describe Account do
 
     before do
       stub_const(directory_path, db_test)
-      stub_const(filename, test_file)
+      stub_const(app_path, OVERRIDABLE_FILENAME)
       storage.data[:user] << current_acc
     end
 
     after do
-      File.delete(File.join(db_test, test_file))
+      File.delete(OVERRIDABLE_FILENAME)
       Dir.rmdir(db_test)
     end
 
@@ -438,11 +426,11 @@ RSpec.describe Account do
   describe '#destroy_card' do
     before do
       stub_const(directory_path, db_test)
-      stub_const(filename, test_file)
+      stub_const(app_path, OVERRIDABLE_FILENAME)
     end
 
     after do
-      File.delete(File.join(db_test, test_file))
+      File.delete(OVERRIDABLE_FILENAME)
       Dir.rmdir(db_test)
     end
 
@@ -472,16 +460,18 @@ RSpec.describe Account do
     let(:card_two) { CardUsual.new }
     let(:fake_cards) { [card_one, card_two] }
 
-    it 'delete card' do
-      allow(card_functions.communication).to receive(:serial_number_of_card).and_return('1')
-      card_functions.destroy_card
-      expect(card_functions.current_account.card).not_to include(card_one)
+    context 'when exit if first gets is exit' do
+      it do
+        expect(card_functions.communication).to receive_message_chain(:gets, :chomp) { 'exit' }
+        card_functions.destroy_card
+      end
     end
 
     context 'with correct outout' do
       it do
         fake_cards.each_with_index do |card, i|
           allow(card_functions.communication).to receive(:serial_number_of_card).and_return(i + 1)
+          allow(card_functions.communication).to receive(:card_delete_confirmation)
           message = /If you want to delete #{card.number}, #{card.type}, press #{i + 1}/
           expect { card_functions.destroy_card }.to output(message).to_stdout
         end
@@ -491,13 +481,31 @@ RSpec.describe Account do
 
     context 'with incorrect input of card number' do
       it do
-        allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('6', '1')
+        allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('6', 'exit')
         expect { card_functions.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
       end
 
       it do
-        allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('-5', '1')
+        allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('-5', 'exit')
         expect { card_functions.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+      end
+    end
+
+    context 'with correct input of card number' do
+      let(:accept_for_deleting) { 'y' }
+      let(:reject_for_deleting) { 'asdf' }
+      let(:deletable_card_number) { 1 }
+
+      it 'accept deleting' do
+        commands = [deletable_card_number, accept_for_deleting]
+        allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(*commands)
+        expect { card_functions.destroy_card }.to change { card_functions.current_account.card.size }.by(-1)
+      end
+
+      it 'decline deleting' do
+        commands = [deletable_card_number, reject_for_deleting]
+        allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(*commands)
+        expect { card_functions.destroy_card }.not_to change { card_functions.current_account.card.size }
       end
     end
   end
@@ -505,11 +513,11 @@ RSpec.describe Account do
   describe 'put_money' do
     before do
       stub_const(directory_path, db_test)
-      stub_const(filename, test_file)
+      stub_const(app_path, OVERRIDABLE_FILENAME)
     end
 
     after do
-      File.delete(File.join(db_test, test_file))
+      File.delete(OVERRIDABLE_FILENAME)
       Dir.rmdir(db_test)
     end
 
@@ -552,35 +560,87 @@ RSpec.describe Account do
 
       context 'with incorrect input of card number' do
         it do
-          allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('6', '1')
+          allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('6', 'exit')
           expect { card_functions.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
         end
 
         it do
-          allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('-5', '1')
+          allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('-5', 'exit')
           expect { card_functions.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
         end
       end
 
       context 'with correct input of card number' do
+        let(:card_one) { CardCapitalist.new }
+        let(:card_two) { CardCapitalist.new }
+        let(:fake_cards) { [card_one, card_two] }
+        let(:with_card_data) do
+          UserData.new(name: 'Johnny', age: '29', login: 'qweqwe', password: 'qweqweqweqw', card: fake_cards)
+        end
+
+        let(:chosen_card_number) { 1 }
+        let(:incorrect_money_amount) { -2 }
+        let(:default_balance) { 100.0 }
+        let(:correct_money_amount) { 30 }
+        let(:correct_money_amount_lower_than_tax) { 5 }
+        let(:correct_money_amount_greater_than_tax) { 50 }
+
+        before do
+          allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(*commands)
+        end
+
         context 'with correct output' do
-          let(:card_number) { 1 }
-          let(:money_amont) { 200 }
+          let(:commands) { [chosen_card_number, correct_money_amount] }
 
           it do
-            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(card_number,
-                                                                                                   money_amont)
             expect { card_functions.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
           end
 
-          it 'put money on card' do
-            allow(card_functions.communication).to receive(:serial_number_of_card).and_return(card_number)
-            allow(card_functions.communication).to receive(:money_amount).and_return(money_amont)
-            card_functions.put_money
-            expect(card_functions.current_account.card[0].balance).to be > 200
+          context 'with amount lower then 0' do
+            let(:commands) { [chosen_card_number, incorrect_money_amount, chosen_card_number, correct_money_amount] }
+
+            it do
+              expect { card_functions.put_money }.to output(/#{ERROR_PHRASES[:correct_amount]}/).to_stdout
+            end
+          end
+
+          context 'with amount greater then 0' do
+            context 'with tax greater than amount' do
+              let(:commands) { [chosen_card_number, correct_money_amount_lower_than_tax] }
+
+              it do
+                expect { card_functions.put_money }.to output(/#{ERROR_PHRASES[:tax_higher]}/).to_stdout
+              end
+            end
+          end
+
+          context 'with tax lower than amount' do
+            let(:with_card_data) do
+              UserData.new(name: 'Johnny', age: '29', login: 'qweqwe', password: 'qweqweqweqw', card: custom_cards)
+            end
+
+            let(:custom_cards) { [CardUsual.new, CardCapitalist.new, CardVirtual.new] }
+
+            it do
+              custom_cards.each_with_index do |custom_card, index|
+                custom_card.instance_variable_set(:@balance, default_balance)
+                allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(index + 1,
+                                                                                                       correct_money_amount_greater_than_tax)
+                new_balance = default_balance + correct_money_amount_greater_than_tax - custom_card.put_tax(correct_money_amount_greater_than_tax)
+
+                expect { card_functions.put_money }.to output(
+                  /Money #{correct_money_amount_greater_than_tax} was put on #{custom_card.number}. Balance: #{new_balance}. Tax: #{custom_card.put_tax(correct_money_amount_greater_than_tax)}/
+                ).to_stdout
+
+                expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
+                storage.data[:user] << with_card_data
+
+                file_accounts = storage.data[:user]
+                expect(file_accounts.first.card[index].balance).to eq(new_balance)
+              end
+            end
           end
         end
-        
       end
     end
   end
@@ -588,11 +648,11 @@ RSpec.describe Account do
   describe '#withdraw_money' do
     before do
       stub_const(directory_path, db_test)
-      stub_const(filename, test_file)
+      stub_const(app_path, OVERRIDABLE_FILENAME)
     end
 
     after do
-      File.delete(File.join(db_test, test_file))
+      File.delete(OVERRIDABLE_FILENAME)
       Dir.rmdir(db_test)
     end
 
@@ -619,7 +679,7 @@ RSpec.describe Account do
         let(:with_card_data) do
           UserData.new(name: 'Johnny', age: '29', login: 'qweqwe', password: 'qweqweqweqw', card: fake_cards)
         end
-        
+
         context 'with correct outout' do
           it do
             fake_cards.each_with_index do |card, i|
@@ -630,245 +690,48 @@ RSpec.describe Account do
             end
           end
         end
-        
+
         context 'with incorrect input of card number' do
           it do
-            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('6', '1')
+            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(
+              fake_cards.length + 1, 'exit'
+            )
             expect { card_functions.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
           end
-  
+
           it do
-            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return('-5', '1')
+            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(- 1, 'exit')
             expect { card_functions.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
           end
         end
-        
+
         context 'with correct input of card number' do
-          let(:card_number) { 1 }
-          let(:money_amont) { 200 }
-          it do
-            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(card_number,
-                                                                                                   money_amont)
-            expect { card_functions.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
+          let(:card_one) { CardCapitalist.new }
+          let(:card_two) { CardCapitalist.new }
+          let(:fake_cards) { [card_one, card_two] }
+          let(:with_card_data) do
+            UserData.new(name: 'Johnny', age: '29', login: 'qweqwe', password: 'qweqweqweqw', card: fake_cards)
           end
 
-        it 'withdraw money' do
-          allow(card_functions.communication).to receive(:serial_number_of_card).and_return(1)
-          allow(card_functions.communication).to receive(:money_amount).and_return(10)
-          card_functions.withdraw_money
-          expect(card_functions.current_account.card[0].balance).to be < 50
+          let(:chosen_card_number) { 1 }
+          let(:incorrect_money_amount) { -2 }
+          let(:default_balance) { 50.0 }
+          let(:correct_money_amount) { 30 }
+          let(:correct_money_amount_lower_than_tax) { 5 }
+          let(:correct_money_amount_greater_than_tax) { 50 }
+
+          before do
+            allow(card_functions.communication).to receive_message_chain(:gets, :chomp).and_return(*commands)
+          end
+
+          context 'with correct output' do
+            let(:commands) { [chosen_card_number, correct_money_amount] }
+
+            it do
+              expect { card_functions.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
+            end
+          end
         end
-      end
-    end
-    end
-  end
-
-  describe 'communications' do
-    subject(:communication) { Communication.new }
-
-    context 'start_menu input' do
-      let(:correct_comand) { 'create' }
-      let(:incorrect_comand) { 'eww' }
-
-      before do
-        allow(communication.output).to receive(:welcome)
-      end
-
-
-    
-    end
-
-    context 'name_init input' do
-      let(:correct_input) { 'Nikita' }
-
-      it 'test correct name input' do
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.name_init).to eq(correct_input)
-      end
-
-      it 'test name with small first letter' do
-        allow(communication).to receive_message_chain(:gets, :chomp).and_return(correct_input.downcase, correct_input)
-        expect(communication.name_init).to eq(correct_input)
-      end
-
-      it 'test short name input' do
-        allow(communication).to receive_message_chain(:gets, :chomp).and_return('e', correct_input)
-        expect(communication.name_init).to eq(correct_input)
-      end
-
-      it 'test long name input' do
-        allow(communication).to receive_message_chain(:gets, :chomp).and_return('qwdqwdqqdqwqwqwdqwqwde', correct_input)
-        expect(communication.name_init).to eq(correct_input)
-      end
-    end
-
-    context 'age_init input' do
-      let(:correct_input) { '28' }
-
-      it 'test correct age input' do
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.age_init).to eq(correct_input)
-      end
-
-      it 'test age < 23 ' do
-        allow(communication).to receive_message_chain(:gets, :chomp).and_return('1', correct_input)
-        expect(communication.age_init).to eq(correct_input)
-      end
-
-      it 'test age > 90' do
-        allow(communication).to receive_message_chain(:gets, :chomp).and_return('200', correct_input)
-        expect(communication.age_init).to eq(correct_input)
-      end
-    end
-
-    context 'login_init input' do
-      before do
-        stub_const(directory_path, db_test)
-        stub_const(filename, test_file)
-      end
-
-      after do
-        File.delete(File.join(db_test, test_file))
-        Dir.rmdir(db_test)
-      end
-
-      let(:accounts) { BankStorage.new.data[:user] }
-      let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: 'qwdqwdq', card: []) }
-      let(:correct_input) { 'qwertyy' }
-      let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: 'qwdqwdq', card: []) }
-
-      it 'test correct login input during registration' do
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.login_init(accounts)).to eq(correct_input)
-      end
-
-      it 'test login input wich already exsist during registration' do
-        accounts << some_account
-        allow(communication).to receive(:gets).and_return('qwerty', correct_input)
-        expect(communication.login_init(accounts)).to eq(correct_input)
-      end
-
-      it 'test login input < 4' do
-        allow(communication).to receive(:gets).and_return('qwe', correct_input)
-        expect(communication.login_init(accounts)).to eq(correct_input)
-      end
-
-      it 'test login input > 20' do
-        allow(communication).to receive(:gets).and_return((21.times { 'k' }).to_s, correct_input)
-        expect(communication.login_init(accounts)).to eq(correct_input)
-      end
-    end
-
-    context 'password init ' do
-      let(:correct_input) { 'nikitysik))' }
-
-      it 'test correct login input during registration' do
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.password_init).to eq(correct_input)
-      end
-
-      it 'test password input < 6' do
-        allow(communication).to receive(:gets).and_return('qwe', correct_input)
-        expect(communication.password_init).to eq(correct_input)
-      end
-
-      it 'test login input > 30' do
-        allow(communication).to receive(:gets).and_return((30.times { 'k' }).to_s, correct_input)
-        expect(communication.password_init).to eq(correct_input)
-      end
-    end
-
-    context 'login_search input' do
-      before do
-        stub_const(directory_path, db_test)
-        stub_const(filename, test_file)
-      end
-
-      after do
-        File.delete(File.join(db_test, test_file))
-        Dir.rmdir(db_test)
-      end
-
-      let(:accounts) { BankStorage.new.data[:user] }
-      let(:correct_input) { 'qwertyy' }
-      let(:some_account) do
-        UserData.new(name: 'qqq', age: '29', login: correct_input, password: correct_input, card: [])
-      end
-
-      it 'test coorect login input ' do
-        accounts << some_account
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.login_search(accounts)).to eq(correct_input)
-      end
-
-      it 'test incorrect login input ' do
-        accounts << some_account
-        allow(communication).to receive(:gets).and_return('q', correct_input)
-        expect(communication.login_search(accounts)).to eq(correct_input)
-      end
-    end
-
-    context 'password_search input' do
-      before do
-        stub_const(directory_path, db_test)
-        stub_const(filename, test_file)
-        communication.instance_variable_set(:@login, 'qwerty')
-      end
-
-      after do
-        File.delete(File.join(db_test, test_file))
-        Dir.rmdir(db_test)
-      end
-
-      let(:accounts) { BankStorage.new.data[:user] }
-      let(:correct_input) { 'qwertyy' }
-      let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: correct_input, card: []) }
-
-      it 'test coorect password input ' do
-        accounts << some_account
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.password_search(accounts)).to eq(correct_input)
-      end
-
-      it 'test incorrect login input ' do
-        accounts << some_account
-        allow(communication).to receive(:gets).and_return('q', correct_input)
-        expect(communication.password_search(accounts)).to eq(correct_input)
-      end
-    end
-
-    context 'serial_number_of_card input' do
-      let(:correct_input) { '1' }
-      let(:card) { CardGenerator.new }
-      let(:some_account) { UserData.new(name: 'qqq', age: '29', login: 'qwerty', password: 'wwwww', card: [card]) }
-
-     
-
-    
-    end
-
-    context 'type of card input' do
-      let(:correct_input) { 'usual' }
-
-    
-
-      it 'test incorrect type input ' do
-        allow(communication).to receive(:gets).and_return('2', correct_input)
-        expect(communication.card_init).to eq(correct_input)
-      end
-    end
-
-    context 'main menu input' do
-      let(:correct_input) { 'SC' }
-
-      it 'test correct command input ' do
-        allow(communication).to receive(:gets).and_return(correct_input)
-        expect(communication.main_menu).to eq(correct_input)
-      end
-
-      it 'test incorrect command input ' do
-        allow(communication).to receive(:gets).and_return('2', correct_input)
-        expect(communication.main_menu).to eq(correct_input)
       end
     end
   end

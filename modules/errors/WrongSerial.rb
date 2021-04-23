@@ -1,6 +1,5 @@
 class WrongSerial < StandardError
-  ERROR_MESSAGE = I18n.t(:wrong_serial)
   def initialize
-    super(ERROR_MESSAGE)
+    super(I18n.t(:wrong_serial))
   end
 end

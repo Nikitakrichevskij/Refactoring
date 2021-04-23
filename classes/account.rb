@@ -10,10 +10,11 @@ class Account < Console
 
   def create
     data_input
-    store.data[:user] << user_data
+    user = user_data
+    store.data[:user] << user
     store.save
 
-    @current_account = user_data
+    @current_account = user
     @functions = CardFunctions.new(current_account, store, accounts)
     main_menu
   end
@@ -21,7 +22,7 @@ class Account < Console
   def loading
     @login = communication.login_search(accounts)
     @password = communication.password_search(accounts)
-    @current_account = accounts.select { |account| account.login == login }.first
+    @current_account = accounts.find { |account| account.login == login }
     @functions = CardFunctions.new(current_account, store, accounts)
     main_menu
   end

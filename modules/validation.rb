@@ -18,7 +18,7 @@ module Validation
   end
 
   def login_search_valid?(accounts, login)
-    raise NoAcc unless login_exist?(accounts, login)
+    raise NoAccount unless login_exist?(accounts, login)
   end
 
   def password_search_valid?(accounts, login, password)
