@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Console
   attr_reader :communication
 

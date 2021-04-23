@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Validation
   def validation_start_menu(input)
     raise WrongCommand unless Constants::START_MENU_COMMANDS.include?(input)

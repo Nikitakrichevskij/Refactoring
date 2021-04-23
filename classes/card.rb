@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Card
   attr_reader :type, :number
   attr_accessor :balance

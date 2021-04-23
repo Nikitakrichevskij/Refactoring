@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class CardCapitalist < Card
   attr_accessor :number, :balance, :type
 
   DEFAULT_BALANCE = 100.00
 
-  TYPE = 'capitalist'.freeze
+  TYPE = 'capitalist'
 
   TAXES = {
     withdraw: 0.04,

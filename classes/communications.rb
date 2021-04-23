@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Communication
   include Validation
   attr_reader :view, :login

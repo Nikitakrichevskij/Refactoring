@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Account < Console
   attr_reader :name, :age, :login, :password, :accounts, :current_account, :functions
   attr_accessor :store

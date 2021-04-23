@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserData
   attr_reader :name, :age, :login, :password, :index
   attr_accessor :card

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CardFunctions
   attr_reader :communication, :store, :current_account, :accounts
 

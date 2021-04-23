@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class CardVirtual < Card
   attr_accessor :number, :balance, :type
 
   DEFAULT_BALANCE = 150.00
 
-  TYPE = 'virtual'.freeze
+  TYPE = 'virtual'
 
   TAXES = {
     withdraw: 0.88,

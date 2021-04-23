@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Constants
   START_MENU_COMMANDS = %w[create load exit].freeze
   CARDS_TYPE = %w[usual capitalist virtual].freeze

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class BankStorage
-  STORAGE_DIRECTORY = 'db'.freeze
-  STORAGE_FILE = 'db/db.yml'.freeze
+  STORAGE_DIRECTORY = 'db'
+  STORAGE_FILE = 'db/db.yml'
   attr_accessor :data
 
   def initialize
