@@ -1,0 +1,58 @@
+en:
+  welcome: |
+    Hello, we are RubyG bank!
+    If you want to create account - press `create`
+    If you want to load account - press `load`
+    If you want to exit - press `exit` 
+  wrong_command: "Wrong command. Try again!"
+  name: 'Enter your name'
+  age: 'Enter your age'
+  login: 'Enter your login'
+  password: 'Enter your password'
+  card_init: |
+   You could create one of 3 card types
+   Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`
+   Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`
+   Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`
+   For exit - press `exit`
+  user_actions: |
+   Welcome, 
+   'If you want to:'
+   '- show all cards - press SC'
+   '- create card - press CC'
+   '- destroy card - press DC'
+   '- put money on card - press PM'
+   '- withdraw money on card - press WM'
+   '- send money to another card  - press SM'
+   '- destroy account - press `DA`'
+   '- exit from account - press `exit`
+  delete_card: If you want to delete %{card_number}, %{card_type}, press %{index}
+  put_money: "Choose the card for putting: 
+    %{card_number}, %{card_type}, press %{index}"
+  withdraw_money: "Choose the card for withdrawing: 
+    %{card_number}, %{card_type}, press %{index}"
+  send_money: "Choose the card for sending: \n
+    %{card_number}, %{card_type}, press %{index}"
+  put_error: 'Your tax is higher than input amount'
+  money_amount: 'Input the amount of money'
+  recipient_card: 'Enter recipient card'
+  no_card_exist: "There is no active cards!\n"
+  show_cards: "All cards: \n
+    %{card_number}, %{card_type}"
+  wrong_password: 'Wrong password'
+  wrong_login: 'Wrong login'
+  no_account: There is no account with given credentials
+  wrong_age: Your Age must be greeter then 23 and lower then 90
+  wrong_card_name: Worng type of card
+  wrong_card_number: Wrong number of card
+  wrong_login: Login must present, be longer then 4 symbols and shorter then 20 symbols or
+    such account is already exists
+  wrong_name: Your name must not be empty and starts with first upcase letter
+  wrong_password: 'Password must present, be longer then 6 symbols and shorter then 30 symbols'
+  wrong_serial: "You entered wrong number!\n"
+  incorrect_money_amount: You must input correct amount of money
+  card_delete_confirmation: Are you sure you want to delete %{card_number}[y/n]
+  tax_higher: Your tax is higher than input amount
+  final_put_money_output: "Money %{money_amount} was put on %{card_number}. Balance: %{new_balance}. Tax: %{tax}"
+  put_money_amount: Input the amount of money you want to put on your card
+  withdraw_money_amount: Input the amount of money you want to withdraw

@@ -1,0 +1,22 @@
+# frozen_string_literal: true
+
+require 'i18n'
+require 'yaml/store'
+require 'pry'
+require 'date'
+require_relative 'config/i18n'
+require_relative 'modules/constants'
+require_relative 'modules/errors/NoAccount'
+Dir[File.join(__dir__, 'modules/errors/*.rb')].sort.each { |file| require file }
+require_relative 'modules/validation'
+require_relative 'classes/storage'
+require_relative 'classes/userdata'
+require_relative 'classes/outputs'
+require_relative 'classes/communications'
+require_relative 'classes/card'
+require_relative 'classes/usual_card'
+require_relative 'classes/capitalist_card'
+require_relative 'classes/virtual_card'
+require_relative 'classes/card_functions'
+require_relative 'classes/console'
+require_relative 'classes/account'

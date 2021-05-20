@@ -26,5 +26,3 @@ Metrics/LineLength:
 Documentation:
   Enabled: false
 
-FrozenStringLiteralComment:
-  Enabled: false
